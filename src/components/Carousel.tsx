@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { useSwipeable } from 'react-swipeable';
 import { Destination } from '../types/destination';
 import { CarouselInfo } from './carousel/CarouselInfo';
 import { NextPreview } from './carousel/NextPreview';
 import { CarouselImage } from './carousel/CarouselImage';
+import { Logo } from './Logo'; // Import the Logo component
 
 interface CarouselProps {
   destinations: Destination[];
@@ -21,11 +23,20 @@ export function Carousel({ destinations }: CarouselProps) {
     setIsAnimating(true);
     setDirection(1);
     setCurrentIndex(nextIndex);
-    setTimeout(() => setIsAnimating(false), 800);
+    setTimeout(() => setIsAnimating(false), 1200); // Match the duration of the CSS transition
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: handleNext,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
+
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div {...handlers} className="relative h-screen w-full overflow-hidden">
+      <div className="absolute top-8 left-8 z-30">
+        <Logo /> {/* Add the Logo component */}
+      </div>
       <AnimatePresence initial={false} custom={direction} mode="wait">
         <CarouselImage
           key={currentIndex}

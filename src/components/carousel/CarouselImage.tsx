@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useTransform, useViewportScroll } from 'framer-motion';
 
 interface CarouselImageProps {
   image: string;
@@ -6,9 +6,12 @@ interface CarouselImageProps {
 }
 
 export function CarouselImage({ image, direction }: CarouselImageProps) {
+  const { scrollY } = useViewportScroll();
+  const y = useTransform(scrollY, [0, 1], ["0%", "50%"]);
+
   const slideVariants = {
     enter: (direction: number) => ({
-      scale: 1.4,
+      scale: 1.2,
       x: direction > 0 ? '100%' : '-100%',
       opacity: 0,
     }),
@@ -36,7 +39,7 @@ export function CarouselImage({ image, direction }: CarouselImageProps) {
         transition={{
           x: { type: "spring", stiffness: 100, damping: 30 },
           opacity: { duration: 0.8 },
-          scale: { duration: 1, ease: "easeOut" }
+          scale: { duration: 0.8, ease: "easeOut" }
         }}
         className="absolute inset-0 w-full h-full"
         style={{
@@ -45,6 +48,7 @@ export function CarouselImage({ image, direction }: CarouselImageProps) {
           backgroundPosition: 'center',
           filter: 'blur(8px)',
           transform: 'scale(1.1)',
+          y
         }}
       />
 
@@ -65,6 +69,7 @@ export function CarouselImage({ image, direction }: CarouselImageProps) {
           backgroundImage: `url(${image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          y
         }}
       />
 

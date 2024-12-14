@@ -27,7 +27,7 @@ export function NextPreview({ destination, onClick }: NextPreviewProps) {
         onClick={onClick}
         className="cursor-pointer group"
       >
-        <div className="relative w-40 h-28 sm:w-48 sm:h-32 overflow-hidden rounded-lg">
+        <div className="relative w-32 h-24 sm:w-48 sm:h-32 overflow-hidden rounded-lg">
           <motion.img
             src={destination.image}
             alt="Next destination"
@@ -50,7 +50,7 @@ export function NextPreview({ destination, onClick }: NextPreviewProps) {
             }}
           >
             <div className="absolute bottom-3 left-3 flex items-center">
-              <h3 className="text-white text-sm font-medium">{destination.name}</h3>
+              <h3 className="text-xs sm:text-sm text-white font-medium">{destination.name}</h3>
               <ChevronRight className="w-4 h-4 text-white ml-1" />
             </div>
           </motion.div>
