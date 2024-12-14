@@ -10,11 +10,22 @@ interface SearchSectionProps {
 export function SearchSection({ destinations }: SearchSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [filteredDestinations, setFilteredDestinations] = useState<Destination[]>(destinations);
 
-  const filteredDestinations = destinations.filter(dest =>
-    dest.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.location.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    const filtered = destinations.filter(dest =>
+      dest.name.toLowerCase().includes(term.toLowerCase()) ||
+      dest.location.toLowerCase().includes(term.toLowerCase())
+    );
+    setFilteredDestinations(filtered);
+  };
+
+  const handleSuggestionClick = (destination: Destination) => {
+    setSearchTerm(destination.name);
+    setFilteredDestinations([destination, ...destinations.filter(dest => dest.id !== destination.id)]);
+    setIsSearchFocused(false);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-start pt-20 px-4">
@@ -29,7 +40,7 @@ export function SearchSection({ destinations }: SearchSectionProps) {
             type="text"
             placeholder="Search destinations..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             className="w-full px-6 py-4 bg-white/10 rounded-lg text-white placeholder-white/50 outline-none focus:ring-2 focus:ring-white/20"
@@ -48,6 +59,7 @@ export function SearchSection({ destinations }: SearchSectionProps) {
               <div
                 key={dest.id}
                 className="p-4 hover:bg-white/20 cursor-pointer transition-colors"
+                onClick={() => handleSuggestionClick(dest)}
               >
                 <h3 className="text-white font-semibold">{dest.name}</h3>
                 <p className="text-white/70 text-sm">{dest.location}</p>
@@ -63,7 +75,7 @@ export function SearchSection({ destinations }: SearchSectionProps) {
         transition={{ delay: 0.3 }}
         className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
       >
-        {destinations.map((dest) => (
+        {filteredDestinations.map((dest) => (
           <motion.div
             key={dest.id}
             whileHover={{ y: -5 }}
